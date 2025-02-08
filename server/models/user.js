@@ -21,12 +21,21 @@ const userSechmea= new mongoose.Schema({
     },
     contact:{
         type:String,
-        required:true
+        // required:true
     },
+    address:{
+        street:String,
+        city:String,
+        state:String,
+        pincode:String,
+        coordinates:{lat:Number,lng:Number},
+    },
+    donor_type:{
+        type:String
+    }
 },{timestamps:true})
 
 
 const UserModel= mongoose.model('users',userSechmea)
-
 
 export default UserModel

@@ -4,18 +4,106 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { motion } from "framer-motion"
 import { Camera, MapPin } from "lucide-react"
+import { post } from "../services/ApiEndpoint"
+import { toast } from "react-hot-toast"
 
 export function DonationForm() {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm()
   const [image, setImage] = useState(null)
+  const [loading, setLoading] = useState(false)
+  const [coordinates, setCoordinates] = useState(null)
 
-  const onSubmit = (data) => {
-    console.log(data)
-    // TODO: Implement API call to submit donation
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation is not supported by your browser")
+      return
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, lng } = position.coords
+        setCoordinates({ lat: latitude, lng: position.coords.longitude })
+
+        // Try to get address from coordinates using reverse geocoding
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${position.coords.longitude}`
+          )
+          const data = await response.json()
+          if (data.display_name) {
+            setValue('location', data.display_name)
+            toast.success("Location updated successfully")
+          }
+        } catch (error) {
+          console.error("Error getting address:", error)
+          toast.error("Could not get address from coordinates")
+        }
+      },
+      (error) => {
+        console.error("Error getting location:", error)
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            toast.error("Please allow location access to use this feature")
+            break
+          case error.POSITION_UNAVAILABLE:
+            toast.error("Location information is unavailable")
+            break
+          case error.TIMEOUT:
+            toast.error("Location request timed out")
+            break
+          default:
+            toast.error("An error occurred getting your location")
+        }
+      }
+    )
+  }
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true)
+
+      if (!coordinates) {
+        toast.error("Please set your location")
+        return
+      }
+
+      // Create FormData if there's an image
+      const formData = new FormData()
+      if (image) {
+        formData.append("image", image)
+        // You would need to implement image upload logic here
+        // and get back the imageURL
+      }
+
+      // Prepare donation data
+      const donationData = {
+        foodType: data.foodType,
+        quantity: Number(data.quantity),
+        expiry: new Date(data.expiryDate),
+        location: {
+          address: data.location,
+          ...coordinates // Include lat/lng
+        },
+        imageURL: image ? "image_url_here" : null,
+      }
+
+      const response = await post("/api/donations", donationData)
+      toast.success("Donation submitted successfully!")
+      reset()
+      setImage(null)
+      setCoordinates(null)
+    } catch (error) {
+      console.error("Error submitting donation:", error)
+      toast.error(error.response?.data?.message || "Error submitting donation")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -92,10 +180,8 @@ export function DonationForm() {
             <button
               type="button"
               className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 hover:bg-gray-100"
-              onClick={() => {
-                // TODO: Implement geolocation
-                console.log("Get current location")
-              }}
+              onClick={handleGetLocation}
+              disabled={loading}
             >
               <MapPin className="h-5 w-5" />
             </button>

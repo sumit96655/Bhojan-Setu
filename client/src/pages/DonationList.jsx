@@ -3,27 +3,36 @@
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Search, Filter } from "lucide-react"
-
-const mockDonations = [
-  { id: 1, foodType: "Rice", quantity: 50, status: "Pending", date: "2023-05-01" },
-  { id: 2, foodType: "Vegetables", quantity: 30, status: "Collected", date: "2023-05-02" },
-  { id: 3, foodType: "Bread", quantity: 20, status: "Distributed", date: "2023-05-03" },
-]
+import { get } from "../services/ApiEndpoint"
+import { toast } from "react-hot-toast"
 
 export function DonationList() {
   const [donations, setDonations] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState("All")
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    // TODO: Replace with actual API call
-    setDonations(mockDonations)
+    fetchDonations()
   }, [])
+
+  const fetchDonations = async () => {
+    try {
+      setLoading(true)
+      const response = await get("/api/donations")
+      setDonations(response.data)
+    } catch (error) {
+      console.error("Error fetching donations:", error)
+      toast.error("Error fetching donations")
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const filteredDonations = donations.filter(
     (donation) =>
       donation.foodType.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (statusFilter === "All" || donation.status === statusFilter),
+      (statusFilter === "All" || donation.status === statusFilter.toLowerCase())
   )
 
   return (
@@ -74,31 +83,46 @@ export function DonationList() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredDonations.map((donation) => (
-              <motion.tr
-                key={donation.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <td className="px-6 py-4 whitespace-nowrap">{donation.foodType}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{donation.quantity}</td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span
-                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      donation.status === "Pending"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : donation.status === "Collected"
-                          ? "bg-blue-100 text-blue-800"
-                          : "bg-green-100 text-green-800"
-                    }`}
-                  >
-                    {donation.status}
-                  </span>
+            {loading ? (
+              <tr>
+                <td colSpan="4" className="px-6 py-4 text-center">
+                  Loading...
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">{donation.date}</td>
-              </motion.tr>
-            ))}
+              </tr>
+            ) : filteredDonations.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="px-6 py-4 text-center">
+                  No donations found
+                </td>
+              </tr>
+            ) : (
+              filteredDonations.map((donation) => (
+                <motion.tr
+                  key={donation._id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <td className="px-6 py-4 whitespace-nowrap">{donation.foodType}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{donation.quantity}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <span
+                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${donation.status === "pending"
+                          ? "bg-yellow-100 text-yellow-800"
+                          : donation.status === "approved"
+                            ? "bg-blue-100 text-blue-800"
+                            : "bg-green-100 text-green-800"
+                        }`}
+                    >
+                      {donation.status}
+                    </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {new Date(donation.createdAt).toLocaleDateString()}
+                  </td>
+                </motion.tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

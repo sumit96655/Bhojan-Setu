@@ -3,6 +3,7 @@ import './App.css'
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
+import Navbar from './pages/Navbar'
 import Register from './pages/Register'
 import Admin from './pages/Admin'
 import  { Toaster } from 'react-hot-toast';
@@ -26,6 +27,7 @@ const disptch=useDispatch()
     <>
           <BrowserRouter>
           <Toaster/>
+          <Navbar/>
             <Routes>
               
               <Route path='/' element={<UserLayout/>} >

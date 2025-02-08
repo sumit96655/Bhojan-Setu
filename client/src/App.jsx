@@ -4,9 +4,11 @@ import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Navbar from './pages/Navbar'
+import Footer from './pages/Footer'
 import Register from './pages/Register'
 import DonorDashboard from './pages/DonorDashboard'
 import AdminDashboard from './pages/AdminDashboard'
+import VolunteerDashboard from './pages/VolunteerDashboard'
 import NGODashboard from './pages/NGODashboard'
 import Admin from './pages/Admin'
 import  { Toaster } from 'react-hot-toast';
@@ -37,11 +39,12 @@ const disptch=useDispatch()
               <Route index element={<Home/>}/>
               <Route path='donorDashboard' element={<DonorDashboard/>}/>
               <Route path='ngoDashboard' element={<NGODashboard/>}/>
-              <Route path='adminDashboard' element={<AdminDashboard/>}/>
+              <Route path='volunteerDashboard' element={<VolunteerDashboard/>}/>
 
               </Route>
               <Route path='/admin' element={<AdminLaouts/>}>
               <Route index element={<Admin/>}/>
+              <Route path='adminDashboard' element={<AdminDashboard/>}/>
 
               </Route>
               <Route path='/' element={<PublicLayouts/>}>
@@ -50,6 +53,7 @@ const disptch=useDispatch()
                    
               </Route>
             </Routes>
+            <Footer/>
           </BrowserRouter>
 
 

@@ -9,6 +9,8 @@ import donationRoutes from './routes/donationRoutes.js'
 import ngoRoutes from './routes/ngoRoutes.js'
 import logRoutes from './routes/logRoutes.js'
 import volunteerRoutes from './routes/volunteerRoutes.js';
+import UserModel from './models/user.js'
+import mongoose from 'mongoose'
 
 
 dotenv.config()
@@ -23,6 +25,13 @@ app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173'
 }));
+
+// Register User model if not already registered
+try {
+    mongoose.model('User')
+} catch (error) {
+    mongoose.model('User', UserModel.schema)
+}
 
 app.use('/api/auth', AuthRoutes)
 app.use('/api/admin', AdminRoutes)

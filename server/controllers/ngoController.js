@@ -42,25 +42,21 @@ const createRequest = async (req, res) => {
         }
 
         // Create new request with explicit fields
-        const newRequest = new RequestModel({
-            donationId: donation._id,
-            ngoId: req.user._id,
-            requestStatus: 'requested',
-            createdAt: new Date()  // Add explicit timestamp
-        });
+        donation.status = "requested";
+        donation.requestedNGO = req.user._id;
+        await donation.save();
 
-        console.log('New Request before save:', newRequest);
-
-        await newRequest.save();
 
         // Update donation status
-        donation.status = "approved";
-        donation.assignedNGO = req.user._id;
-        await donation.save();
+        // donation.status = "approved";
+        // donation.assignedNGO = req.user._id;
+        // donation.requestedNGO = req.user._id;
+        // await donation.save();
+
 
         res.status(201).json({
             message: "Request created successfully",
-            request: newRequest
+            // request: newRequest
         });
     } catch (error) {
         console.error('Detailed error:', error);
@@ -85,37 +81,76 @@ const getActiveRequests = async (req, res) => {
 // Update request status
 const updateRequestStatus = async (req, res) => {
     try {
-        const { requestId } = req.params;
+        const { donationId } = req.params;
         const { status } = req.body;
 
-        if (!['requested', 'approved', 'in-transit', 'completed'].includes(status)) {
+        if (!['requested', 'approved', 'collected'].includes(status)) {
             return res.status(400).json({ message: "Invalid status" });
         }
 
-        const request = await RequestModel.findById(requestId);
-        if (!request) {
-            return res.status(404).json({ message: "Request not found" });
+        const donation = await DonationModel.findById(donationId);
+        if (!donation) {
+            return res.status(404).json({ message: "Donation not found" });
         }
 
-        // Verify the NGO owns this request
-        if (request.ngoId.toString() !== req.user.id) {
-            return res.status(403).json({ message: "Unauthorized" });
-        }
+        // Verify the NGO is assigned to this donation
+        // if (donation.assignedNGO?.toString() !== req.user._id.toString()) {
+        //     return res.status(403).json({ message: "Unauthorized" });
+        // }
 
-        request.requestStatus = status;
-        await request.save();
+        // Update donation status
+        donation.status = status;
 
-        // Update donation status if request is completed
+        // If marking as completed, add the NGO to completedNGO field
         if (status === 'completed') {
-            await DonationModel.findByIdAndUpdate(request.donationId, {
-                status: 'delivered'
-            });
+            donation.completedNGO = req.user._id;
         }
+
+        await donation.save();
 
         res.status(200).json({
-            message: "Request status updated successfully",
-            request
+            message: "Donation status updated successfully",
+            donation
         });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const getRequestedDonations = async (req, res) => {
+    try {
+        const donations = await DonationModel.find({
+            requestedNGO: req.user._id,
+            status: "requested"
+        }).populate('donorId', 'name contact address');
+
+        res.status(200).json(donations);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const getApprovedDonations = async (req, res) => {
+    try {
+        const donations = await DonationModel.find({
+            assignedNGO: req.user._id,
+            status: "approved"
+        }).populate('donorId', 'name contact address');
+
+        res.status(200).json(donations);
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+const getCompletedDonations = async (req, res) => {
+    try {
+        const donations = await DonationModel.find({
+            assignedNGO: req.user._id,
+            status: "collected"
+        }).populate('donorId', 'name contact address');
+
+        res.status(200).json(donations);
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
@@ -125,5 +160,8 @@ export {
     getAvailableDonations,
     createRequest,
     getActiveRequests,
-    updateRequestStatus
+    updateRequestStatus,
+    getRequestedDonations,
+    getApprovedDonations,
+    getCompletedDonations
 };

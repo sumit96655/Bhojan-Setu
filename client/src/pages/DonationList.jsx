@@ -61,9 +61,10 @@ export function DonationList() {
             className="appearance-none w-full pl-10 pr-8 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="All">All Status</option>
-            <option value="Pending">Pending</option>
+            <option value="pending">Pending</option>
             <option value="Collected">Collected</option>
             <option value="Distributed">Distributed</option>
+            <option value="requested">Requested</option>
           </select>
           <Filter className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
         </div>

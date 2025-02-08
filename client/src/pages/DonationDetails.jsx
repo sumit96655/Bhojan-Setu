@@ -1,14 +1,42 @@
 import { FaTimes, FaCheck, FaTruck } from "react-icons/fa"
+import { post,put } from "../services/ApiEndpoint"
+import { toast } from "react-hot-toast"
+import { useState } from "react"
 
-export default function DonationDetails({ donation, onClose }) {
-  const handleAccept = () => {
-    // Implement accept logic
-    console.log("Accepted donation:", donation._id)
+export default function DonationDetails({ donation, onClose, onRequestAccepted }) {
+  const [loading, setLoading] = useState(false)
+
+  const handleAccept = async () => {
+    try {
+      setLoading(true)
+      await post("/api/ngo/requests", { donationId: donation._id })
+      toast.success("Request sent successfully")
+      // Update the parent component's state through a new prop
+      onRequestAccepted(donation._id)
+      onClose()
+    } catch (error) {
+      console.error("Error requesting donation:", error)
+      toast.error(error.response?.data?.message || "Failed to request donation")
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleCollect = () => {
-    // Implement collect logic
-    console.log("Marked as collected:", donation._id)
+  const handleCollect = async () => {
+    try {
+      setLoading(true)
+      console.log(donation._id)
+      await put(`/api/ngo/donations/${donation._id}/status`, { status: "collected" })
+      toast.success("Donation marked as collected")
+      onRequestAccepted(donation._id)
+      onClose()
+
+    } catch (error) {
+      console.error("Error updating donation status:", error)
+      toast.error(error.response?.data?.message || "Failed to update donation status")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -35,13 +63,12 @@ export default function DonationDetails({ donation, onClose }) {
         <div>
           <p className="text-sm text-gray-600">Status</p>
           <p
-            className={`font-semibold ${
-              donation.status === "pending"
-                ? "text-yellow-600"
-                : donation.status === "accepted"
-                  ? "text-blue-600"
-                  : "text-green-600"
-            }`}
+            className={`font-semibold ${donation.status === "pending"
+              ? "text-yellow-600"
+              : donation.status === "accepted"
+                ? "text-blue-600"
+                : "text-green-600"
+              }`}
           >
             {donation.status}
           </p>
@@ -59,12 +86,15 @@ export default function DonationDetails({ donation, onClose }) {
         {donation.status === "pending" && (
           <button
             onClick={handleAccept}
-            className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+            disabled={loading}
+            className={`flex items-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
           >
-            <FaCheck className="mr-2" /> Accept
+            <FaCheck className="mr-2" />
+            {loading ? 'Requesting...' : 'Request'}
           </button>
         )}
-        {donation.status === "accepted" && (
+        {donation.status === "approved" && (
           <button
             onClick={handleCollect}
             className="flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-300"

@@ -92,7 +92,7 @@ const Login = () => {
 
             if (request.status === 200) {
                 if (response.user.role === 'admin') {
-                    navigate('/admin');
+                    navigate('/admin/adminDashboard');
                 } else if (response.user.role === 'user') {
                     navigate('/');
                 }

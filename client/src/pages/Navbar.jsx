@@ -151,7 +151,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="backdrop-blur-md bg-gradient-to-r from-gray-900/95 to-gray-800/95 border-b border-gray-500/30 sticky top-0 z-50">
+    <nav className="backdrop-blur-md bg-gradient-to-r from-gray-900/95 to-gray-800/95 border-b border-gray-500/30 sticky top-0 z-[1000]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}

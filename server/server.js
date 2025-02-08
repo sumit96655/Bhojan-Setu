@@ -6,9 +6,14 @@ import DbCon from './utlis/db.js'
 import AuthRoutes from './routes/Auth.js'
 import AdminRoutes from './routes/AdminRoutes.js'
 import donationRoutes from './routes/donationRoutes.js'
+import ngoRoutes from './routes/ngoRoutes.js'
+import logRoutes from './routes/logRoutes.js'
+import volunteerRoutes from './routes/volunteerRoutes.js';
+
+
 dotenv.config()
-const PORT=process.env.PORT || 3000
-const app=express()
+const PORT = process.env.PORT || 3000
+const app = express()
 
 // mongo db 
 DbCon()
@@ -16,20 +21,21 @@ app.use(express.json())
 app.use(cookieparser())
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:5173'  
+    origin: 'http://localhost:5173'
 }));
 
-app.use('/api/auth',AuthRoutes)
-app.use('/api/admin',AdminRoutes)
-app.use("/api/donations", donationRoutes);
-app.use('/api/admin',AdminRoutes)
-app.use('/api/admin',AdminRoutes)
+app.use('/api/auth', AuthRoutes)
+app.use('/api/admin', AdminRoutes)
+app.use("/api/donations", donationRoutes)
+app.use("/api/ngo", ngoRoutes)
+app.use('/api/logs', logRoutes);
+app.use('/api/volunteer', volunteerRoutes);
 
-app.get('/',(req,res)=>{
+app.get('/', (req, res) => {
     res.send('test')
 })
 
-app.listen(PORT,()=>{
+app.listen(PORT, () => {
     console.log(`server is running on ${PORT}`)
 })
 

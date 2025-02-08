@@ -1,4 +1,3 @@
-// const mongoose = require("mongoose");
 import mongoose from "mongoose";
 
 const DonationSchema = new mongoose.Schema({
@@ -7,20 +6,19 @@ const DonationSchema = new mongoose.Schema({
     quantity: { type: Number, required: true },
     expiry: { type: Date, required: true },
     imageURL: { type: String },
-    location: { 
-        lat: { type: Number, required: true }, 
-        lng: { type: Number, required: true } 
+    location: {
+        lat: { type: Number, required: true },
+        lng: { type: Number, required: true }
     },
-    status: { 
-        type: String, 
-        enum: ["pending", "approved", "rejected", "collected", "requested"], 
-        default: "pending" 
+    status: {
+        type: String,
+        enum: ["pending", "approved", "rejected", "collected", "requested"],
+        default: "pending"
     },
     assignedNGO: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     requestedNGO: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
     completedNGO: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null }
 }, { timestamps: true });
 
-const DonationModel = mongoose.model('donations', DonationSchema)
-
+const DonationModel = mongoose.model('Donation', DonationSchema);
 export default DonationModel;

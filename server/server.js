@@ -40,7 +40,6 @@ app.use("/api/ngo", ngoRoutes)
 app.use('/api/logs', logRoutes);
 app.use('/api/volunteer', volunteerRoutes);
 
-
 app.get('/', (req, res) => {
     res.send('test')
 })

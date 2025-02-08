@@ -1,65 +1,3 @@
-// "use client"
-
-// import { useState, useEffect } from "react"
-// import RequestList from "./RequestList"
-// import MapView from "./MapView"
-// import DonationDetails from "./DonationDetails"
-// import io from "socket.io-client"
-
-// const socket = io("http://localhost:5000") // Adjust the URL as needed
-
-// export default function NGODashboard() {
-//   const [selectedDonation, setSelectedDonation] = useState(null)
-//   const [donations, setDonations] = useState([])
-
-//   useEffect(() => {
-//     // Fetch initial donations data
-//     fetchDonations()
-
-//     // Listen for real-time updates
-//     socket.on("newDonation", (donation) => {
-//       setDonations((prevDonations) => [...prevDonations, donation])
-//     })
-
-//     return () => {
-//       socket.off("newDonation")
-//     }
-//   }, [])
-
-//   const fetchDonations = async () => {
-//     try {
-//       const response = await fetch("http://localhost:5000/api/donations")
-//       const data = await response.json()
-//       setDonations(data)
-//     } catch (error) {
-//       console.error("Error fetching donations:", error)
-//     }
-//   }
-
-//   return (
-//     <div className="flex h-screen bg-gray-100">
-//       <div className="flex-1 flex flex-col overflow-hidden">
-//         <header className="bg-white shadow-md">
-//           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-//             <h1 className="text-3xl font-bold text-gray-900">NGO Dashboard</h1>
-//           </div>
-//         </header>
-//         <main className="flex-1 flex">
-//           <div className="w-1/3 bg-white p-6 overflow-auto">
-//             <RequestList donations={donations} onSelectDonation={setSelectedDonation} />
-//           </div>
-//           <div className="w-2/3 p-6 flex flex-col">
-//             <MapView donations={donations} selectedDonation={selectedDonation} />
-//             {selectedDonation && (
-//               <DonationDetails donation={selectedDonation} onClose={() => setSelectedDonation(null)} />
-//             )}
-//           </div>
-//         </main>
-//       </div>
-//     </div>
-//   )
-// }
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -145,8 +83,8 @@ export default function NGODashboard() {
   }, [])
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="flex-1 flex flex-col overflow-hidden">
+    <div className="flex h-screen bg-gray-100 ">
+      <div className="flex-1 flex flex-col overflow-auto">
         <header className="bg-white shadow-md">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold text-gray-900">NGO Dashboard</h1>

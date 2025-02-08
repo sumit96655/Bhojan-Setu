@@ -77,4 +77,38 @@ const approveRequest = async (req, res) => {
     }
 };
 
-export { Getuser, deletUser, approveRequest }
+const rejectRequest = async (req, res) => {
+    try {
+        const { donationId } = req.body;
+
+        // Debug logs
+        console.log('User:', req.user);
+        console.log('DonationId:', donationId);
+
+        // Validate if user exists and has _id
+        if (!req.user || !req.user._id) {
+            return res.status(401).json({ message: "User not authenticated properly" });
+        }
+
+        // Check if donation exists
+        const donation = await DonationModel.findById(donationId);
+        if (!donation) {
+            return res.status(404).json({ message: "Donation not found" });
+        }
+
+        // Update donation status and remove NGO
+        donation.status = "pending";  // Reset to pending
+        donation.requestedNGO = null; // Remove the NGO request
+        await donation.save();
+
+        res.status(200).json({
+            message: "Request rejected successfully",
+            donation
+        });
+    } catch (error) {
+        console.error('Detailed error:', error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+export { Getuser, deletUser, approveRequest, rejectRequest }

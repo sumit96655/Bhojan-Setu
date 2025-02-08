@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Navbar from './pages/Navbar'
 import Register from './pages/Register'
+import DonorDashboard from './pages/DonorDashboard'
 import Admin from './pages/Admin'
 import  { Toaster } from 'react-hot-toast';
 import AdminLaouts from './Layouts/AdminLaouts'
@@ -32,6 +33,7 @@ const disptch=useDispatch()
               
               <Route path='/' element={<UserLayout/>} >
               <Route index element={<Home/>}/>
+              <Route path='donorDashboard' element={<DonorDashboard/>}/>
 
               </Route>
               <Route path='/admin' element={<AdminLaouts/>}>

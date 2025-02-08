@@ -1,103 +1,125 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { get, post } from "../services/ApiEndpoint"
+import { toast } from "react-hot-toast"
 import RequestList from "./RequestList"
 import MapView from "./MapView"
 import DonationDetails from "./DonationDetails"
 
-// Mock data for demonstration
-const mockDonations = [
-  {
-    _id: "1",
-    donorName: "Restaurant A",
-    foodType: "Cooked Meals",
-    quantity: 50,
-    status: "pending",
-    createdAt: new Date().toISOString(),
-    expiryDate: new Date(Date.now() + 86400000).toISOString(), // 24 hours from now
-    address: "123 Main St, Mumbai, India",
-    location: { lat: 19.076, lng: 72.8777 },
-  },
-  {
-    _id: "2",
-    donorName: "Grocery Store B",
-    foodType: "Fresh Produce",
-    quantity: 100,
-    status: "accepted",
-    createdAt: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-    expiryDate: new Date(Date.now() + 172800000).toISOString(), // 48 hours from now
-    address: "456 Park Ave, Delhi, India",
-    location: { lat: 28.6139, lng: 77.209 },
-  },
-  {
-    _id: "3",
-    donorName: "Bakery C",
-    foodType: "Bread and Pastries",
-    quantity: 30,
-    status: "collected",
-    createdAt: new Date(Date.now() - 86400000).toISOString(), // 24 hours ago
-    expiryDate: new Date(Date.now() + 43200000).toISOString(), // 12 hours from now
-    address: "789 Baker St, Bangalore, India",
-    location: { lat: 12.9716, lng: 77.5946 },
-  },
-]
-
 export default function NGODashboard() {
   const [selectedDonation, setSelectedDonation] = useState(null)
   const [donations, setDonations] = useState([])
+  const [myRequests, setMyRequests] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [viewMode, setViewMode] = useState('available') // 'available' or 'myRequests'
 
   useEffect(() => {
-    // Simulate fetching data
-    const fetchDonations = async () => {
-      try {
-        // Simulate API call delay
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setDonations(mockDonations)
-      } catch (error) {
-        console.error("Error fetching donations:", error)
-      }
+    if (viewMode === 'available') {
+      fetchAvailableDonations()
+    } else {
+      fetchMyRequests()
     }
+  }, [viewMode])
 
-    fetchDonations()
+  const fetchAvailableDonations = async () => {
+    try {
+      setLoading(true)
+      const response = await get("/api/ngo/donations/available")
+      setDonations(response.data)
+    } catch (error) {
+      console.error("Error fetching donations:", error)
+      toast.error("Failed to fetch available donations")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    // Simulate real-time updates
-    const interval = setInterval(() => {
-      const newDonation = {
-        _id: Date.now().toString(),
-        donorName: `New Donor ${Math.floor(Math.random() * 100)}`,
-        foodType: "Mixed Items",
-        quantity: Math.floor(Math.random() * 50) + 10,
-        status: "pending",
-        createdAt: new Date().toISOString(),
-        expiryDate: new Date(Date.now() + 86400000).toISOString(),
-        address: `${Math.floor(Math.random() * 1000)} Random St, India`,
-        location: {
-          lat: 20.5937 + (Math.random() - 0.5) * 10,
-          lng: 78.9629 + (Math.random() - 0.5) * 10,
-        },
-      }
-      setDonations((prevDonations) => [...prevDonations, newDonation])
-    }, 30000) // Add a new donation every 30 seconds
+  const fetchMyRequests = async () => {
+    try {
+      setLoading(true)
+      const [approvedRes, completedRes, requestedRes] = await Promise.all([
+        get("/api/ngo/donations/approved"),
+        get("/api/ngo/donations/completed"),
+        get("/api/ngo/donations/requested")
+      ])
+      setMyRequests([...approvedRes.data, ...completedRes.data, ...requestedRes.data])
+    } catch (error) {
+      console.error("Error fetching requests:", error)
+      toast.error("Failed to fetch your requests")
+    } finally {
+      setLoading(false)
+    }
+  }
 
-    return () => clearInterval(interval)
-  }, [])
+  const handleDonationRequest = async (donationId) => {
+    try {
+      await post("/api/ngo/requests", { donationId })
+      setDonations(donations.filter(donation => donation._id !== donationId))
+      setSelectedDonation(null)
+      toast.success("Request sent successfully")
+    } catch (error) {
+      console.error("Error requesting donation:", error)
+      toast.error("Failed to request donation")
+    }
+  }
 
   return (
-    <div className="flex h-screen bg-gray-100 ">
+    <div className="flex h-screen bg-gray-100">
       <div className="flex-1 flex flex-col overflow-auto">
         <header className="bg-white shadow-md">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-gray-900">NGO Dashboard</h1>
+            <div className="flex justify-between items-center">
+              <h1 className="text-3xl font-bold text-gray-900">NGO Dashboard</h1>
+              <div className="flex space-x-4">
+                <button
+                  onClick={() => setViewMode('available')}
+                  className={`px-4 py-2 rounded-md ${viewMode === 'available'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                >
+                  Available Donations
+                </button>
+                <button
+                  onClick={() => setViewMode('myRequests')}
+                  className={`px-4 py-2 rounded-md ${viewMode === 'myRequests'
+                      ? 'bg-blue-500 text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                >
+                  My Requests
+                </button>
+              </div>
+            </div>
           </div>
         </header>
         <main className="flex-1 flex">
           <div className="w-1/3 bg-white p-6 overflow-auto">
-            <RequestList donations={donations} onSelectDonation={setSelectedDonation} />
+            <RequestList
+              donations={viewMode === 'available' ? donations : myRequests}
+              onSelectDonation={setSelectedDonation}
+              onRequestDonation={handleDonationRequest}
+              loading={loading}
+              showRequestButton={viewMode === 'available'}
+            />
           </div>
           <div className="w-2/3 p-6 flex flex-col">
-            <MapView donations={donations} selectedDonation={selectedDonation} />
+            <MapView
+              donations={viewMode === 'available' ? donations : myRequests}
+              selectedDonation={selectedDonation}
+            />
             {selectedDonation && (
-              <DonationDetails donation={selectedDonation} onClose={() => setSelectedDonation(null)} />
+              <DonationDetails
+                donation={selectedDonation}
+                onClose={() => setSelectedDonation(null)}
+                onRequestAccepted={(donationId) => {
+                  setDonations(prevDonations =>
+                    prevDonations.filter(donation => donation._id !== donationId)
+                  )
+                }}
+                showRequestButton={viewMode === 'available'}
+              />
             )}
           </div>
         </main>

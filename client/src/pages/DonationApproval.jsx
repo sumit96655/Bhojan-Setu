@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
-import { get, post,put } from "../services/ApiEndpoint"
+import { get, post, put } from "../services/ApiEndpoint"
 
 const DonationApproval = () => {
   const [pendingDonations, setPendingDonations] = useState([])
@@ -29,7 +29,7 @@ const DonationApproval = () => {
     try {
       setLoading(true)
       console.log(donationId);
-      
+
       await put("/api/admin/approve", { donationId })
       toast.success("Donation approved successfully")
       fetchPendingDonations()
@@ -42,14 +42,21 @@ const DonationApproval = () => {
   }
 
   const handleReject = async (donationId) => {
+    // Show confirmation alert
+    const isConfirmed = window.confirm("Are you sure you want to reject this donation request?");
+
+    if (!isConfirmed) {
+      return; // If user clicks Cancel, don't proceed
+    }
+
     try {
       setLoading(true)
-      await post("/api/admin/reject", { donationId })
+      await put("/api/admin/reject", { donationId })
       toast.success("Donation rejected successfully")
       fetchPendingDonations()
     } catch (error) {
       console.error("Error rejecting donation:", error)
-      toast.error("Failed to reject donation")
+      toast.error(error.response?.data?.message || "Failed to reject donation")
     } finally {
       setLoading(false)
     }

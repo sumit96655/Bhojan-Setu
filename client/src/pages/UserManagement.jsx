@@ -19,7 +19,7 @@ const UserManagement = () => {
       const response = request.data
                 if (request.status===200) {
                    setUsers(response.users)
-                   console.log(response.users)
+                  //  console.log(response.users)
                 }
     } catch (error) {
       console.error("Error fetching users:", error)
@@ -42,7 +42,7 @@ const UserManagement = () => {
             const response=request.data
             if (request.status===200) {
               toast.success(response.message)
-              console.log(response)
+              // console.log(response)
             }
         fetchUsers()
       } catch (error) {

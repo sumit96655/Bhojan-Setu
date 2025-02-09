@@ -34,7 +34,7 @@ const registerVolunteer = async (req, res) => {
 
         }
 
-    
+
         const newVolunteer = new VolunteerModel({
             userId,
             currentLocation: currentLocation || null

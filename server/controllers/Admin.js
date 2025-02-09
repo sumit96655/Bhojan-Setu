@@ -111,4 +111,62 @@ const rejectRequest = async (req, res) => {
     }
 };
 
-export { Getuser, deletUser, approveRequest, rejectRequest }
+const updateUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { name, email, contact, role } = req.body;
+
+        // Validate if user exists
+        const userExists = await UserModel.findById(id);
+        if (!userExists) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Check if email is being changed and if it's already taken by another user
+        if (email !== userExists.email) {
+            const emailExists = await UserModel.findOne({ email, _id: { $ne: id } });
+            if (emailExists) {
+                return res.status(400).json({ message: "Email already in use by another user" });
+            }
+        }
+
+        // Validate role
+        const validRoles = ['user', 'ngo', 'donor', 'volunteer'];
+        if (!validRoles.includes(role)) {
+            return res.status(400).json({ message: "Invalid role specified" });
+        }
+
+        // Update user
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            id,
+            {
+                name,
+                email,
+                contact,
+                role
+            },
+            {
+                new: true,
+                runValidators: true,
+                select: '-password' // Exclude password from the returned object
+            }
+        );
+
+        res.status(200).json({
+            message: "User updated successfully",
+            user: updatedUser
+        });
+
+    } catch (error) {
+        console.error('Update user error:', error);
+        if (error.name === 'ValidationError') {
+            return res.status(400).json({
+                message: "Validation error",
+                errors: Object.values(error.errors).map(err => err.message)
+            });
+        }
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+
+export { Getuser, deletUser, approveRequest, rejectRequest, updateUser }

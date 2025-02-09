@@ -34,7 +34,7 @@ const volunteerSchema = new mongoose.Schema({
         type: Number,
         default: 0
     }
-}, { timestamps: true });  // Using timestamps option instead of manual createdAt
+}, { timestamps: true });  
 
 const VolunteerModel = mongoose.model('volunteers', volunteerSchema);
 

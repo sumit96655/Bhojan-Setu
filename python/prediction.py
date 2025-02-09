@@ -9,6 +9,8 @@ from sklearn.preprocessing import MinMaxScaler
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
+from flask import Flask, jsonify
+from flask_cors import CORS
 
 load_dotenv()
 
@@ -165,3 +167,26 @@ def generate_prediction_summary(forecast_df, historical_data):
 # Example of how to call the function with the forecast_df (predictions for next days) and historical data
 forecast_summary = generate_prediction_summary(forecast_df, df)
 print(forecast_summary)
+
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/api/predictions', methods=['GET'])
+def get_predictions():
+    try:
+        # Your existing prediction logic here
+        # ... (keep the existing prediction code)
+
+        # Format the response
+        response = {
+            'forecast_df': forecast_df.to_dict('records'),
+            'summary': forecast_summary,
+            'historical_data': df.reset_index().to_dict('records')
+        }
+        
+        return jsonify(response)
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+if __name__ == '__main__':
+    app.run(debug=True)

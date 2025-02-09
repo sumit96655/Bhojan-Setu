@@ -67,12 +67,10 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             to="/"
-            className="text-2xl font-bold bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text hover:opacity-80 transition-opacity flex items-center gap-2"
+            className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-green-500 to-green-500 text-transparent bg-clip-text hover:opacity-80 transition-opacity flex items-center gap-2"
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-lg">
-              TS
-            </div>
-            Tech Savvy
+
+            Bhojan Setu
           </Link>
 
           {/* Mobile menu button */}
@@ -113,7 +111,7 @@ const Navbar = () => {
                     onClick={() => setUserDropdownOpen(!userDropdownOpen)}
                     className="flex items-center space-x-2 p-1 rounded-lg hover:bg-white/5 transition-colors"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white font-medium">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-orange-500 to-green-600 flex items-center justify-center text-white font-medium">
                       {user?.name?.[0]?.toUpperCase() || "U"}
                     </div>
                     <span className="text-sm text-gray-300 hover:text-white transition-colors">
@@ -151,7 +149,7 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/login"
-                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white transition-all hover:shadow-lg hover:shadow-blue-500/20"
+                className="flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-orange-500 to-green-600 text-white transition-all hover:shadow-lg hover:shadow-blue-500/20"
               >
                 <LogIn className="w-4 h-4 mr-2" />
                 Sign In

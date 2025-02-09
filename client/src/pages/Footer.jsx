@@ -39,21 +39,13 @@ export default function Footer() {
           {/* Brand and mission */}
           <div className="space-y-4">
             <h2 className="text-3xl font-bold inline-block">
-              <span className="text-green-400">Tech</span>
-              <span
-                className="mines"
-                style={{
-                  backgroundImage:
-                    "url('https://cdn.pixabay.com/photo/2018/08/25/20/58/wall-3630911_1280.jpg')",
-                  backgroundRepeat: "no-repeat",
-                  backgroundSize: "cover",
-                  WebkitBackgroundClip: "text",
-                  color: "transparent",
-                  fontFamily: "'Montserrat', sans-serif",
-                }}
-              >
-                Savvy
-              </span>
+            <Link
+            to="/"
+            className="text-2xl font-bold bg-gradient-to-r from-orange-400 via-green-500 to-green-500 text-transparent bg-clip-text hover:opacity-80 transition-opacity flex items-center gap-2"
+          >
+
+            Bhojan Setu
+          </Link>
             </h2>
             <p className="text-gray-300">
             Connecting surplus food with those in need through innovative technology

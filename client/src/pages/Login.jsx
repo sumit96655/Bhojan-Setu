@@ -1,98 +1,149 @@
-// import React, { useState } from 'react'
-// import { Link, useNavigate } from 'react-router-dom'
-// import { post } from '../services/ApiEndpoint'
-// import  { toast } from 'react-hot-toast';
-// import {useDispatch,useSelector } from 'react-redux'
+// import React, { useState } from 'react';
+// import { Link, useNavigate } from 'react-router-dom';
+// import { post } from '../services/ApiEndpoint';
+// import { toast } from 'react-hot-toast';
+// import { useDispatch } from 'react-redux';
 // import { SetUser } from '../redux/AuthSlice';
+// import { User, Lock } from 'lucide-react';
+
 // export default function Login() {
-//  const user=useSelector((state)=>state.Auth)
-// //  console.log(user)
-//    const dispatch=useDispatch()
-//     const [email,setEmail]=useState('')
-//     const navigate=useNavigate()
-//     const [password,setPassword]=useState('')
+//     const dispatch = useDispatch();
+//     const [email, setEmail] = useState('');
+//     const navigate = useNavigate();
+//     const [password, setPassword] = useState('');
 
-//        const handleSubmit= async(e)=>{
+//     const handleSubmit = async (e) => {
 //         e.preventDefault();
-//           // console.log(email,password)
-//           try {
-//               const request= await post('/api/auth/login',{email,password})
-//               const reponse= request.data 
+//         try {
+//             const request = await post('/api/auth/login', { email, password });
+//             const response = request.data;
 
-//               if (request.status==200) {
-//                 if (reponse.user.role =='admin') {
-//                   navigate('/admin')
-//                 }else if (reponse.user.role =='user') {
-//                    navigate('/')
+//             if (request.status === 200) {
+//                 if (response.user.role === 'admin') {
+//                     navigate('/admin');
+//                 } else if (response.user.role === 'user') {
+//                     navigate('/');
 //                 }
-//                 toast.success(reponse.message)
-//                 dispatch(SetUser(reponse.user))
-//               }
-//               // console.log(reponse)
-//           } catch (error) {
-//             console.log(error)
-//           }
-//        }
-//   return (
-//     <>
+//                 toast.success(response.message);
+//                 dispatch(SetUser(response.user));
+//             }
+//         } catch (error) {
+//             toast.error('Invalid credentials');
+//             console.log(error);
+//         }
+//     };
 
-//         <div className="login-container">
-//             <h2>Login</h2>
-//             <form onSubmit={handleSubmit}>
-//                 <div className='input-group'>
-//                     <label htmlFor="Email">Email</label>
-//                     <input type="email" name="" id="email" 
-//                         onChange={(e)=>setEmail(e.target.value)}
-//                     />
-//                 </div>
-//                 <div className='input-group'>
-//                     <label htmlFor="passowrd">Password</label>
-//                     <input type="password" name=""
-//                       onChange={(e)=>setPassword(e.target.value)} id="password" />
-//                 </div>
-//                 <button type='submit'>Login</button>
-//                 <p className='register-link'>
-//                 Not registered? <Link to={'/register'}>Register here</Link>
+//     return (
+//         <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+//             <div className="sm:mx-auto sm:w-full sm:max-w-md">
+//                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+//                     Welcome Back
+//                 </h2>
+//                 <p className="mt-2 text-center text-sm text-gray-600">
+//                     Sign in to your account
 //                 </p>
-//             </form>
+//             </div>
+
+//             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+//                 <div className="bg-white py-8 px-4 shadow-lg rounded-xl sm:px-10">
+//                     <form className="space-y-6" onSubmit={handleSubmit}>
+//                         <div>
+//                             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+//                                 Email
+//                             </label>
+//                             <div className="mt-1 relative">
+//                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+//                                     <User className="h-5 w-5 text-gray-400" />
+//                                 </div>
+//                                 <input
+//                                     id="email"
+//                                     type="email"
+//                                     required
+//                                     value={email}
+//                                     onChange={(e) => setEmail(e.target.value)}
+//                                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg
+//                                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+//                                     placeholder="Enter your email"
+//                                 />
+//                             </div>
+//                         </div>
+
+//                         <div>
+//                             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+//                                 Password
+//                             </label>
+//                             <div className="mt-1 relative">
+//                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+//                                     <Lock className="h-5 w-5 text-gray-400" />
+//                                 </div>
+//                                 <input
+//                                     id="password"
+//                                     type="password"
+//                                     required
+//                                     value={password}
+//                                     onChange={(e) => setPassword(e.target.value)}
+//                                     className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg
+//                                     focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+//                                     placeholder="Enter your password"
+//                                 />
+//                             </div>
+//                         </div>
+
+//                         <div>
+//                             <button
+//                                 type="submit"
+//                                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg
+//                                 text-sm font-medium text-white bg-gradient-to-r from-green-500 to-emerald-600
+//                                 hover:from-green-600 hover:to-emerald-700 focus:outline-none focus:ring-2
+//                                 focus:ring-offset-2 focus:ring-green-500 transition-colors duration-200
+//                                 shadow-sm"
+//                             >
+//                                 Sign in
+//                             </button>
+//                         </div>
+//                     </form>
+
+//                     <div className="mt-6">
+//                         <div className="relative">
+//                             <div className="relative flex justify-center text-sm">
+//                                 <span className="px-2 text-gray-600">
+//                                     Not registered yet?{' '}
+//                                     <Link to="/register" className="font-medium text-green-600 hover:text-green-500">
+//                                         Create an account
+//                                     </Link>
+//                                 </span>
+//                             </div>
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
 //         </div>
-
-
-
-
-//     </>
-//   )
+//     );
 // }
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { post } from '../services/ApiEndpoint';
 import { toast } from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { SetUser } from '../redux/AuthSlice';
-import { User, Lock, Loader2, LogIn } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { User, Lock, Sparkles } from 'lucide-react';
 
-const Login = () => {
-    const user = useSelector((state) => state.Auth);
+export default function Login() {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const [errMsg, setErrMsg] = useState('');
     const navigate = useNavigate();
+    const [password, setPassword] = useState('');
+    const [isHovering, setIsHovering] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
-        setErrMsg('');
-        
         try {
             const request = await post('/api/auth/login', { email, password });
             const response = request.data;
 
             if (request.status === 200) {
                 if (response.user.role === 'admin') {
-                    navigate('/admin/adminDashboard');
+                    navigate('/admin');
                 } else if (response.user.role === 'user') {
                     navigate('/');
                 }
@@ -100,118 +151,106 @@ const Login = () => {
                 dispatch(SetUser(response.user));
             }
         } catch (error) {
-            setErrMsg('Login Failed. Please check your credentials.');
+            toast.error('Invalid credentials');
             console.log(error);
-        } finally {
-            setIsLoading(false);
         }
     };
 
-    if (isLoading) {
-        return (
-            <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-                <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-            <div className="relative">
-                {/* Background decorators */}
-                <div className="absolute -top-20 -left-20 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob" />
-                <div className="absolute -bottom-20 -right-20 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000" />
-                
-                {/* Main card */}
-                <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="relative bg-gray-800 p-8 rounded-2xl shadow-xl w-full max-w-md border border-gray-700"
-                >
-                    {/* Decorative SVG */}
-                    <div className="absolute top-0 right-0 w-32 h-32">
-                        <svg viewBox="0 0 100 100" className="opacity-20">
-                            <circle cx="75" cy="25" r="20" className="fill-blue-500" />
-                            <path d="M 0 100 L 100 0" stroke="currentColor" className="stroke-purple-500" strokeWidth="0.5" />
-                            <path d="M 20 80 L 80 20" stroke="currentColor" className="stroke-blue-500" strokeWidth="0.5" />
-                        </svg>
-                    </div>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 left-0 w-full h-full">
+                <div className="absolute top-20 left-20 w-32 h-32 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" />
+                <div className="absolute bottom-20 right-20 w-32 h-32 bg-pink-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-700" />
+                <div className="absolute top-40 right-40 w-32 h-32 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse delay-500" />
+            </div>
 
-                    <h2 className="text-3xl font-bold mb-8 text-white text-center">Login</h2>
+            <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+                <div className="flex justify-center mb-6">
+                    <Sparkles className="h-12 w-12 text-purple-400 animate-pulse" />
+                </div>
+                <h2 className="text-center text-4xl font-extrabold text-gray-900 tracking-tight">
+                    Welcome Back
+                </h2>
+                <p className="mt-2 text-center text-lg text-gray-600">
+                    We're so happy to see you again ✨
+                </p>
+            </div>
 
-                    {errMsg && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="mb-6 p-3 bg-red-500 bg-opacity-20 border border-red-500 rounded-lg"
-                        >
-                            <p className="text-red-500 text-center text-sm" aria-live="assertive">
-                                {errMsg}
-                            </p>
-                        </motion.div>
-                    )}
-
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="text-gray-300 block text-sm font-medium">
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md relative z-10">
+                <div className="bg-white/80 backdrop-blur-lg py-8 px-4 shadow-xl rounded-2xl sm:px-10 transform transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        <div>
+                            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                                 Email
                             </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                            <div className="mt-1 relative group">
+                           
                                 <input
-                                    type="email"
                                     id="email"
+                                    type="email"
+                                    required
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    required
-                                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-2 px-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                    placeholder="Enter email"
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl
+                                    focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent
+                                    transition-all duration-200 hover:border-purple-200"
+                                    placeholder="Enter your email"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="text-gray-300 block text-sm font-medium">
+                        <div>
+                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                                 Password
                             </label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                            <div className="mt-1 relative group">
+                              
                                 <input
-                                    type="password"
                                     id="password"
+                                    type="password"
+                                    required
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    required
-                                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-lg py-2 px-10 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
-                                    placeholder="Enter password"
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-200 rounded-xl
+                                    focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent
+                                    transition-all duration-200 hover:border-purple-200"
+                                    placeholder="Enter your password"
                                 />
                             </div>
                         </div>
 
-                        <button
-                            type="submit"
-                            className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg py-2 px-4 hover:opacity-90 transition-all duration-200 flex items-center justify-center space-x-2"
-                        >
-                            <LogIn className="h-5 w-5" />
-                            <span>Sign In</span>
-                        </button>
+                        <div>
+                            <button
+                                type="submit"
+                                onMouseEnter={() => setIsHovering(true)}
+                                onMouseLeave={() => setIsHovering(false)}
+                                className="w-full flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-xl
+                                text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-400
+                                hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2
+                                focus:ring-offset-2 focus:ring-purple-400 transition-all duration-300
+                                shadow-lg hover:shadow-xl"
+                            >
+                                Sign in
+                                {isHovering && <Sparkles className="h-4 w-4 animate-spin" />}
+                            </button>
+                        </div>
                     </form>
 
-                    <div className="mt-6 text-center">
-                        <p className="text-gray-400">
-                            Not registered?{' '}
-                            <Link 
-                                to="/register" 
-                                className="text-blue-400 hover:text-blue-300 transition-colors duration-200 font-medium"
-                            >
-                                Register here
-                            </Link>
-                        </p>
+                    <div className="mt-8">
+                        <div className="relative">
+                            <div className="relative flex justify-center text-sm">
+                                <span className="px-2 text-gray-600">
+                                    Not registered yet?{' '}
+                                    <Link to="/register" className="font-medium text-purple-500 hover:text-purple-600 transition-colors duration-200">
+                                        Create an account
+                                    </Link>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                </motion.div>
+                </div>
             </div>
         </div>
     );
-};
-
-export default Login;
+}

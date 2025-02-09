@@ -1,53 +1,79 @@
 import React, { useEffect } from 'react'
 import './App.css'
-import {BrowserRouter,Routes,Route} from 'react-router-dom'
-import Home from './pages/Home'
-import Login from './pages/Login'
-import Navbar from './pages/Navbar'
-import Register from './pages/Register'
-import Admin from './pages/Admin'
-import  { Toaster } from 'react-hot-toast';
-import AdminLaouts from './Layouts/AdminLaouts'
-import UserLayout from './Layouts/UserLayout'
-import PbulicLayout from './Layouts/PublicLayouts'
-import PublicLayouts from './Layouts/PublicLayouts'
-import { useDispatch,useSelector } from 'react-redux'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateUser } from './redux/AuthSlice'
 
+// Pages
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import Navbar from './pages/Navbar'
+import Footer from './pages/Footer'
+import DonorDashboard from './pages/DonorDashboard'
+import AdminDashboard from './pages/AdminDashboard'
+import VolunteerDashboard from './pages/VolunteerDashboard'
+import NGODashboard from './pages/NGODashboard'
+import Admin from './pages/Admin'
+import LogisticsHub from "./pages/LogisticsHub"
+
+// Layouts
+import AdminLayout from './Layouts/AdminLaouts'
+import DonorLayout from './Layouts/DonorLayout'
+import NGOLayout from './Layouts/NGOLayout'
+import VolunteerLayout from './Layouts/VolunteerLayout'
+import PublicLayout from './Layouts/PublicLayouts'
 
 export default function App() {
-  const user=useSelector((state)=>state.Auth.user)
-const disptch=useDispatch()
-  useEffect(()=>{
-         
-        disptch(updateUser())
-  },[user])
+  const user = useSelector((state) => state.Auth.user)
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(updateUser())
+  }, [dispatch])
 
   return (
     <>
-          <BrowserRouter>
-          <Toaster/>
-          <Navbar/>
-            <Routes>
-              
-              <Route path='/' element={<UserLayout/>} >
-              <Route index element={<Home/>}/>
+      <BrowserRouter>
+        <Toaster />
+        <Navbar />
+        <Routes>
+          {/* Public Routes */}
+          <Route path='/' element={<PublicLayout />}>
+            <Route index element={<Home />} />
+            <Route path='login' element={<Login />} />
+            <Route path='register' element={<Register />} />
+          </Route>
 
-              </Route>
-              <Route path='/admin' element={<AdminLaouts/>}>
-              <Route index element={<Admin/>}/>
+          {/* Admin Routes */}
+          <Route path='/admin' element={<AdminLayout />}>
+            <Route index element={<AdminDashboard />} />
+            <Route path='dashboard' element={<AdminDashboard />} />
+          </Route>
 
-              </Route>
-              <Route path='/' element={<PublicLayouts/>}>
-              <Route path='login' element={<Login/>}/>
-              <Route path='register' element={<Register/>}/>
-                   
-              </Route>
-            </Routes>
-          </BrowserRouter>
+          {/* Donor Routes */}
+          <Route path='/donor' element={<DonorLayout />}>
+            <Route index element={<DonorDashboard />} />
+            <Route path='donations' element={<DonorDashboard />} />
+          </Route>
 
+          {/* NGO Routes */}
+          <Route path='/ngo' element={<NGOLayout />}>
+            <Route index element={<NGODashboard />} />
+            <Route path='requests' element={<NGODashboard />} />
+            <Route path="logistics" element={<LogisticsHub />} />
+          </Route>
 
+          {/* Volunteer Routes */}
+          <Route path='/volunteer' element={<VolunteerLayout />}>
+            <Route index element={<VolunteerDashboard />} />
+            <Route path='deliveries' element={<VolunteerDashboard />} />
+          </Route>
 
+        </Routes>
+        <Footer />
+      </BrowserRouter>
     </>
   )
 }

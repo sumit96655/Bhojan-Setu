@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+/* Add these styles to your CSS file */
+.volunteer-marker {
+    background: none;
+    border: none;
+}
+
+.volunteer-marker div {
+    font-size: 24px;
+}
+
+.leaflet-container {
+    height: 100%;
+    width: 100%;
+}

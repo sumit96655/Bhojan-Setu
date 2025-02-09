@@ -10,10 +10,10 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <nav className="bg-green-600 p-4">
+      {/* <nav className="bg-green-600 p-4">
         <h1 className="text-white text-2xl font-bold">FoodBridge Admin</h1>
-      </nav>
-      <div className="container mx-auto mt-8">
+      </nav> */}
+      <div className="container mx-auto pt-4">
         <div className="flex mb-4">
           <button
             className={`mr-4 px-4 py-2 rounded ${activeTab === "users" ? "bg-green-500 text-white" : "bg-white"}`}

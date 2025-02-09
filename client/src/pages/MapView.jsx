@@ -19,7 +19,7 @@ export default function MapView({ donations, selectedDonation }) {
     // Add markers for all donations
     donations.forEach((donation) => {
       if (!markersRef.current[donation._id]) {
-        const marker = L.marker([donation.location.lat, donation.location.lng])
+        const marker = L.marker([20.5937, 78.9629])
           .addTo(mapRef.current)
           .bindPopup(donation.donorName)
         markersRef.current[donation._id] = marker

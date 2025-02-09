@@ -1,10 +1,10 @@
 // VolunteerDashboard.js
 import React, { useState } from 'react';
-import { 
-  Trophy, 
-  CalendarCheck, 
-  Users, 
-  Clock, 
+import {
+  Trophy,
+  CalendarCheck,
+  Users,
+  Clock,
   TrendingUp,
   Bell,
   Search,
@@ -101,47 +101,47 @@ const VolunteerDashboard = () => {
     </div>
   );
 
-//   const renderHeader = () => (
-//     <div className="bg-white shadow-sm mb-8">
-//       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-//         <div className="flex items-center justify-between h-16">
-//           <div className="flex items-center">
-//             <div className="flex-shrink-0">
-//               <img className="h-8 w-8" src="/api/placeholder/32/32" alt="Logo" />
-//             </div>
-//             {/* <div className="hidden md:block">
-//               <div className="ml-10 flex items-baseline space-x-4">
-//                 <a href="#" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-//                 <a href="#" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Schedule</a>
-//                 <a href="#" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">History</a>
-//                 <a href="#" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Resources</a>
-//               </div>
-//             </div> */}
-//           </div>
-//           <div className="flex items-center space-x-4">
-//             <div className="relative">
-//               <input
-//                 type="text"
-//                 placeholder="Search..."
-//                 className="w-64 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-//               />
-//               <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
-//             </div>
-//             <div className="relative">
-//               <button className="p-2 rounded-full hover:bg-gray-100">
-//                 <Bell className="h-6 w-6 text-gray-500" />
-//                 <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
-//               </button>
-//             </div>
-//             <div className="flex items-center space-x-2">
-//               <img className="h-8 w-8 rounded-full" src="/api/placeholder/32/32" alt="Profile" />
-//               <span className="text-sm font-medium text-gray-700">John Doe</span>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
+  //   const renderHeader = () => (
+  //     <div className="bg-white shadow-sm mb-8">
+  //       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  //         <div className="flex items-center justify-between h-16">
+  //           <div className="flex items-center">
+  //             <div className="flex-shrink-0">
+  //               <img className="h-8 w-8" src="/api/placeholder/32/32" alt="Logo" />
+  //             </div>
+  //             {/* <div className="hidden md:block">
+  //               <div className="ml-10 flex items-baseline space-x-4">
+  //                 <a href="#" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
+  //                 <a href="#" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Schedule</a>
+  //                 <a href="#" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">History</a>
+  //                 <a href="#" className="text-gray-500 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Resources</a>
+  //               </div>
+  //             </div> */}
+  //           </div>
+  //           <div className="flex items-center space-x-4">
+  //             <div className="relative">
+  //               <input
+  //                 type="text"
+  //                 placeholder="Search..."
+  //                 className="w-64 px-4 py-2 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
+  //               />
+  //               <Search className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
+  //             </div>
+  //             <div className="relative">
+  //               <button className="p-2 rounded-full hover:bg-gray-100">
+  //                 <Bell className="h-6 w-6 text-gray-500" />
+  //                 <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
+  //               </button>
+  //             </div>
+  //             <div className="flex items-center space-x-2">
+  //               <img className="h-8 w-8 rounded-full" src="/api/placeholder/32/32" alt="Profile" />
+  //               <span className="text-sm font-medium text-gray-700">John Doe</span>
+  //             </div>
+  //           </div>
+  //         </div>
+  //       </div>
+  //     </div>
+  //   );
 
   const renderNotifications = () => (
     <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
@@ -168,7 +168,7 @@ const VolunteerDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* {renderHeader()} */}
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -180,10 +180,10 @@ const VolunteerDashboard = () => {
             View Schedule
           </button>
         </div>
-        
+
         {renderStats()}
         {renderNotifications()}
-        
+
         <div className="grid grid-cols-1 gap-8">
           <AssignedDonations />
           <TaskManagement />

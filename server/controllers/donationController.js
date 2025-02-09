@@ -6,7 +6,7 @@ import UserModel from '../models/user.js'
 const createDonation = async (req, res) => {
     try {
         const { foodType, quantity, expiry, imageURL, location } = req.body;
-        
+
         if (!foodType || !quantity || !expiry || !location) {
             return res.status(400).json({ message: "Missing required fields" });
         }
